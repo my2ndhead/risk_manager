@@ -1,0 +1,39 @@
+<form script="autodiscover.js, risk_settings.js" stylesheet="risk_settings.css">
+  <label>Risk Settings</label>
+  <search id="risk_settings_search">
+    <query>| inputlookup risk_settings| eval key=_key |  append [| rest /servicesNS/nobody/$app$/saved/searches/ splunk_server=local | search action.script.filename=risk_handler.py | fields title | rename title as alert] | dedup alert | eval title=if(isnull(title),"",title) | eval risk_field=if(isnull(risk_field),"",risk_field) | eval risk_score=if(isnull(risk_score), 0, risk_score) | eval collect_evidence=if(isnull(collect_evidence), 0, collect_evidence)| eval encrypt_evidence=if(isnull(encrypt_evidence), 0, encrypt_evidence) | table key, alert, title, risk_field, risk_manager, collect_evidence, encrypt_evidence</query>
+    <earliest>0</earliest>
+    <latest></latest>
+  </search>
+  <row>
+    <panel>
+      <html>
+        <b>Note:</b> If your alert doesn't appear, it's probably not visible globally. Try to select the correct app context, save the alert settings once, et voilà, the alert appears from now on.
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="dropdown" token="app" searchWhenChanged="true">
+        <label>App context:</label>
+        <search>
+          <query>| rest /services/apps/local splunk_server=local | fields title | dedup title | sort title</query>
+          <earliest>-1m</earliest>
+          <latest>now</latest>
+        </search>
+        <fieldForLabel>title</fieldForLabel>
+        <fieldForValue>title</fieldForValue>
+        <default>search</default>
+      </input>     
+      <html>
+        <button id="save_settings">Save settings</button>
+        <div id="risk_settings" 
+          class="splunk-view"
+          data-require="app/risk_manager/views/risksettingsview"
+          data-options='{
+            "managerid": "risk_settings_search"
+          }'> </div>
+      </html>
+    </panel>
+  </row>
+</form>
