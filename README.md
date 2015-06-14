@@ -1,6 +1,6 @@
 # Alert Manager
 - **Authors**:		Simon Balz <simon@balz.me>, Mika Borner <mika.borner@gmail.com>
-- **Description**:	Risk Manage
+- **Description**:	Risk Manager
 - **Version**: 		1.0
 
 ## Introduction
