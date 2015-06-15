@@ -55,7 +55,7 @@ from splunk.models.field import BoolField, Field
 
 
 
-class IncidentSettings(controllers.BaseController):
+class RiskSettings(controllers.BaseController):
 
     @expose_page(must_login=True, methods=['GET']) 
     def easter_egg(self, **kwargs):
@@ -63,14 +63,14 @@ class IncidentSettings(controllers.BaseController):
 
     @expose_page(must_login=True, methods=['POST']) 
     def delete(self, key, **kwargs):
-        logger.info("Removing incident settings contents for %s..." % key)
+        logger.info("Removing risk settings contents for %s..." % key)
 
         user = cherrypy.session['user']['name']
         sessionKey = cherrypy.session.get('sessionKey')
 
         query = {}
         query['_key'] = key
-        logger.debug("Query for incident settings: %s" % urllib.quote(json.dumps(query)))
+        logger.debug("Query for risk settings: %s" % urllib.quote(json.dumps(query)))
         uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risk_settings?query=%s' % urllib.quote(json.dumps(query))
         serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, method='DELETE')
 

@@ -120,8 +120,9 @@ incident_config = {}
 incident_config['title']                   = ''
 incident_config['risk_field']              = ''
 incident_config['risk_score']              = ''
-incident_config['collect_evidence']        = False
-incident_config['encrypt_evidence']        = False
+incident_config['collect_contributing_data']        = False
+incident_config['contributing_data_fields']        = False
+incident_config['encrypt_data']        = False
 query = {}
 query['alert'] = alert
 log.debug("Query for alert settings: %s" % urllib.quote(json.dumps(query)))
