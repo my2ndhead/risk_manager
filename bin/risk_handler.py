@@ -49,6 +49,7 @@ def writeResultToCollection(results):
     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_result)
     log.debug("results for risk_id=%s written to collection." % (risk_id))
 
+
 #
 # Init
 #
@@ -118,11 +119,10 @@ log.debug("Parsed global risk handler settings: %s" % json.dumps(config))
 #
 incident_config = {}
 incident_config['title']                   = ''
-incident_config['risk_field']              = ''
+incident_config['risk_object']              = ''
 incident_config['risk_score']              = ''
 incident_config['collect_contributing_data']        = False
-incident_config['contributing_data_fields']        = False
-incident_config['encrypt_data']        = False
+incident_config['encrypt']        = False
 query = {}
 query['alert'] = alert
 log.debug("Query for alert settings: %s" % urllib.quote(json.dumps(query)))
@@ -150,7 +150,7 @@ except:
     log.error("Unable to get savedsearch. Unexpected error: %s" % sys.exc_info()[0])
 
 savedsearchContent = json.loads(savedsearchContent)
-log.debug("Parsed savedsearch settings: digest_mode=%s" % savedsearchContent['entry'][0]['content']['alert.digest_mode'] ))
+log.debug("Parsed savedsearch settings: digest_mode=%s" % savedsearchContent['entry'][0]['content']['alert.digest_mode'] )
 
 # Add attributes id to alert metadata
 job['job_id']    = job_id
@@ -168,3 +168,5 @@ risk_id = str(uuid.uuid4())
 
 results = getResults(job_path, risk_id)
 result_id = getResultId(digest_mode, job_path)
+
+writeResultToCollection(results)

@@ -1,7 +1,7 @@
 <form script="autodiscover.js, risk_settings.js" stylesheet="risk_settings.css">
   <label>Risk Settings</label>
   <search id="risk_settings_search">
-    <query>| inputlookup risk_settings| eval key=_key |  append [| rest /servicesNS/nobody/$app$/saved/searches/ splunk_server=local | search action.script.filename=risk_handler.py | fields title | rename title as alert] | dedup alert | eval title=if(isnull(title),"",title) | eval risk_field=if(isnull(risk_field),"",risk_field) | eval risk_score=if(isnull(risk_score), 0, risk_score) | eval collect_contributing_data=if(isnull(collect_contributing_data), 0, collect_contributing_data)| eval contributing_data_fields=if(isnull(contributing_data_fields),"",contributing_data_fields) | eval encrypt_data=if(isnull(encrypt_data), 0, encrypt_data) | table key, alert, title, risk_field, risk_score, collect_contributing_data, contributing_data_fields, encrypt_data</query>
+    <query>| inputlookup risk_settings| eval key=_key |  append [| rest /servicesNS/nobody/$app$/saved/searches/ splunk_server=local | search action.script.filename=risk_handler.py | fields title | rename title as alert] | dedup alert | eval title=if(isnull(title),"",title) | eval risk_object=if(isnull(risk_object),"",risk_object) | eval risk_score=if(isnull(risk_score), 0, risk_score) | eval collect_contributing_data=if(isnull(collect_contributing_data), 0, collect_contributing_data) | eval encrypt_data=if(isnull(encrypt_data), 0, encrypt_data) | table key, alert, title, risk_object, risk_score, collect_contributing_data, encrypt_data</query>
     <earliest>0</earliest>
     <latest></latest>
   </search>

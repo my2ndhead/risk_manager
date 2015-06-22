@@ -50,14 +50,13 @@ define(function(require, exports, module) {
             headers = [ { col: "_key", tooltip: false }, 
                         { col: "alert", tooltip: false },
                         { col: "title", tooltip: "Configure a title better identification" },
-                        { col: "risk_field", tooltip: "Select a field for scoring risks" },
+                        { col: "risk_object", tooltip: "Select an object (field) for scoring risk, e.g. user, host etc." },
                         { col: "risk_score", tooltip: "Select a risk score. May also be negative"},
                         { col: "collect_contributing_data", tooltip: "Select, if contributing data should be collected"},
-                        { col: "contributing_data_fields", tooltip: "Space separated list of fields to collect"},
-                        { col: "encrypt_data", tooltip: "Select, if all data should be encrypted"} ];
+                        { col: "encrypt", tooltip: "Select, if all data should be encrypted"} ];
             $("#handson_container").handsontable({
                 data: data,
-                //colHeaders: ["_key", "alert", "risk_field", "risk_score", "collect_contributing_data", "contributing_data_fields", "encrypt_data"],
+                //colHeaders: ["_key", "alert", "risk_object", "risk_score", "collect_contributing_data", "encrypt"],
                 columns: [
                     {
                         data: "_key",
@@ -70,7 +69,7 @@ define(function(require, exports, module) {
                         data: "title",
                     },
                     {
-                        data: "risk_field",
+                        data: "risk_object",
                     },
                     {
                         data: "risk_score",
@@ -80,10 +79,7 @@ define(function(require, exports, module) {
                         type: "checkbox"
                     },
                     {
-                        data: "contributing_data_fields",
-                    },
-                    {
-                        data: "encrypt_data",
+                        data: "encrypt",
                         type: "checkbox"
                     },
 
@@ -176,11 +172,10 @@ define(function(require, exports, module) {
                     _key: val.key,
                     alert: val.alert, 
                     title: val.title,
-                    risk_field: val.risk_field,
+                    risk_object: val.risk_object,
                     risk_score: val.risk_score, 
                     collect_contributing_data: parseInt(val.collect_contributing_data) ? true : false, 
-                    contributing_data_fields: val.contributing_data_fields,
-                    encrypt_data: parseInt(val.encrypt_data) ? true : false, 
+                    encrypt: parseInt(val.encrypt) ? true : false, 
                 };
             }).each(function(line) {
                 myData.push(line);        

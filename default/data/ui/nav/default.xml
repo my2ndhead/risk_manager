@@ -1,6 +1,7 @@
 <nav search_view="search" color="#D25B3B">
   <view name="search" default='true' />
   <collection label="Settings">
+	<a href="/manager/risk_manager/apps/local/risk_manager/setup?action=edit">Global Settings</a>
         <view name="risk_settings" />
   </collection>
   <collection label="Help" >
