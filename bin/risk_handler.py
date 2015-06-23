@@ -18,6 +18,7 @@ import time
 import datetime
 import hashlib
 import re
+import uuid
 
 sys.stdout = open('/tmp/stdout2', 'a')
 sys.stderr = open('/tmp/stderr2', 'a')
@@ -41,6 +42,7 @@ def getResultId(digest_mode, job_path):
 def getResults(job_path, risk_id):
     parser = CsvResultParser(job_path)
     results = parser.getResults({ "risk_id": risk_id })
+
     return results
 
 # Write risk_result to collection
@@ -118,20 +120,20 @@ log.debug("Parsed global risk handler settings: %s" % json.dumps(config))
 #
 # Get per risk settings
 #
-incident_config = {}
-incident_config['title']                   = ''
-incident_config['risk_object']              = ''
-incident_config['risk_score']              = ''
-incident_config['collect_contributing_data']        = False
-incident_config['encrypt']        = False
+risk_config = {}
+risk_config['title']                   = ''
+risk_config['risk_object']              = ''
+risk_config['risk_score']              = ''
+risk_config['collect_contributing_data']        = False
+risk_config['encrypt']        = False
 query = {}
 query['alert'] = alert
 log.debug("Query for alert settings: %s" % urllib.quote(json.dumps(query)))
 uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risk_settings?query=%s' % urllib.quote(json.dumps(query))
 serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey)
 log.debug("Risk settings: %s" % serverContent)
-incident_settings = json.loads(serverContent)
-if len(incident_settings) > 0:
+risk_settings = json.loads(serverContent)
+if len(risk_settings) > 0:
     log.info("Found risk settings for %s" % alert)
     for key, val in risk_settings[0].iteritems():
         risk_config[key] = val
@@ -139,6 +141,17 @@ else:
     log.info("No risk settings found for %s, switching back to defaults." % alert)
 
 log.debug("Risk config after getting settings: %s" % json.dumps(risk_config))
+
+#
+# Alert metadata
+#
+# Get alert metadata
+uri = '/services/search/jobs/%s' % job_id
+serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, getargs={'output_mode': 'json'})
+job = json.loads(serverContent)
+alert_app = job['entry'][0]['acl']['app']
+result_count = job['entry'][0]['content']['resultCount']
+log.info("Found job for alert %s. Context is '%s' with %s results." % (alert, alert_app, result_count))
 
 # Get savedsearch settings
 uri = '/servicesNS/nobody/%s/admin/savedsearch/%s' % (alert_app, urllib.quote(alert))
@@ -171,3 +184,5 @@ results = getResults(job_path, risk_id)
 result_id = getResultId(digest_mode, job_path)
 
 writeResultToCollection(results)
+log.info("Alert results for job_id=%s risk_id=%s result_id=%s written to collection risk_results" % (job_id, risk_id, str(result_id)))
+
