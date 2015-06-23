@@ -27,6 +27,7 @@ if not dir in sys.path:
     sys.path.append(dir)
 
 from CsvLookup import *
+from CsvResultParser import *
 
 # Get result_id depending of digest mode
 def getResultId(digest_mode, job_path):
