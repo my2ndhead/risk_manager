@@ -45,13 +45,35 @@ def getResults(job_path, risk_id):
 
     return results
 
+# Get risk_score for risk_object
+def getRiskScore(risk_object):
+  risk = {}
+  risk['risk_score'] = '0'
+
+  query = {}
+  query['risk_object'] = risk_object
+
+  log.debug("Query for risk object: %s" % urllib.quote(json.dumps(query)))
+  uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks?query=%s' % urllib.quote(json.dumps(query))
+  serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey)
+  log.debug("Risk object: %s" % serverContent)
+  risk = json.loads(serverContent)
+  if len(risk) > 0:
+    log.info("Found risk_object %s" % risk_object)
+    #for key, val in risk[0].iteritems():
+    #    risk[key] = val
+  else:
+    log.info("No risks_object %s found, switching back to defaults." % alert)
+  
+  return risk[0]['risk_score']
+
 # Write risk_result to collection
 def writeResultToCollection(results):
     risk_result = json.dumps(results)
+    log.debug("Result: %s" % risk_result)
     uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risk_results'
     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_result)
     log.debug("results for risk_id=%s written to collection." % (risk_id))
-
 
 #
 # Init
@@ -142,6 +164,8 @@ else:
 
 log.debug("Risk config after getting settings: %s" % json.dumps(risk_config))
 
+log.debug("risk_object=%s" % risk_config["risk_object"])
+
 #
 # Alert metadata
 #
@@ -173,7 +197,6 @@ job['job_id']    = job_id
 alert_time = job['entry'][0]['published']
 digest_mode = savedsearchContent['entry'][0]['content']['alert.digest_mode']
 
-
 ###############################
 # Risk creation starts here
 
@@ -186,3 +209,8 @@ result_id = getResultId(digest_mode, job_path)
 writeResultToCollection(results)
 log.info("Alert results for job_id=%s risk_id=%s result_id=%s written to collection risk_results" % (job_id, risk_id, str(result_id)))
 
+risk_object_value = results['fields'][0][risk_config["risk_object"]]
+
+current_risk_score = getRiskScore(risk_object_value)
+
+log.info("risk_object_value=%s risk_score=%s" % (risk_object_value, risk_config["risk_score"]))
