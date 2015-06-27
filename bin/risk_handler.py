@@ -47,25 +47,46 @@ def getResults(job_path, risk_id):
 
 # Get risk_score for risk_object
 def getRiskScore(risk_object):
-  risk = {}
-  risk['risk_score'] = '0'
+    risk = {}
+    risk['risk_score'] = '0'
 
-  query = {}
-  query['risk_object'] = risk_object
+    query = {}
+    query['risk_object'] = risk_object
 
-  log.debug("Query for risk object: %s" % urllib.quote(json.dumps(query)))
-  uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks?query=%s' % urllib.quote(json.dumps(query))
-  serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey)
-  log.debug("Risk object: %s" % serverContent)
-  risk = json.loads(serverContent)
-  if len(risk) > 0:
-    log.info("Found risk_object %s" % risk_object)
-    #for key, val in risk[0].iteritems():
-    #    risk[key] = val
-  else:
-    log.info("No risks_object %s found, switching back to defaults." % alert)
+    log.debug("Query for risk object: %s" % urllib.quote(json.dumps(query)))
+    uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks?query=%s' % urllib.quote(json.dumps(query))
+    serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey)
+    log.debug("Risk object: %s" % serverContent)
+    risk = json.loads(serverContent)
+    if len(risk) > 0:
+        log.info("Found risk_object %s" % risk_object)
+        key = risk[0]['_key']
+        risk_score = int(risk[0]['risk_score'])
+        return key, risk_score 
+    else:
+        log.info("No risks_object %s found, switching back to defaults." % alert)
+        return "null" ,0
+
+# Update risk score for risk object
+def updateRiskScore(key, risk_object_field, risk_object, risk_score , current_risk_score):
+    risk = {}
+    log.debug("Risk Score: %s" % risk_score) 
+    log.debug("Current Risk Score: %s" % current_risk_score) 
+    risk_score = int(risk_score) + current_risk_score
+
+    #risk['_key'] = key
+    risk['risk_object_field'] = risk_object_field
+    risk['risk_object'] = risk_object
+    risk['risk_score'] = risk_score
   
-  return risk[0]['risk_score']
+    risk_scoring = json.dumps(risk)
+    log.debug("Risk Scoring: %s" % risk_scoring)
+    if (key=="null"): 
+        uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/'  
+    else:
+        uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/'+key
+    serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_scoring)  
+    log.debug("Risk Score updated to collection: %s" % risk_scoring) 
 
 # Write risk_result to collection
 def writeResultToCollection(results):
@@ -75,7 +96,7 @@ def writeResultToCollection(results):
     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_result)
     log.debug("results for risk_id=%s written to collection." % (risk_id))
 
-#
+
 # Init
 #
 start = time.time()
@@ -144,7 +165,7 @@ log.debug("Parsed global risk handler settings: %s" % json.dumps(config))
 #
 risk_config = {}
 risk_config['title']                   = ''
-risk_config['risk_object']              = ''
+risk_config['risk_object']             = ''
 risk_config['risk_score']              = ''
 risk_config['collect_contributing_data']        = False
 risk_config['encrypt']        = False
@@ -206,11 +227,16 @@ risk_id = str(uuid.uuid4())
 results = getResults(job_path, risk_id)
 result_id = getResultId(digest_mode, job_path)
 
-writeResultToCollection(results)
-log.info("Alert results for job_id=%s risk_id=%s result_id=%s written to collection risk_results" % (job_id, risk_id, str(result_id)))
+# Check if we have to store contributing data
+log.info("Collect_contributing_data=%s" % (risk_config['collect_contributing_data']))
+if (risk_config['collect_contributing_data'] == True):
+  writeResultToCollection(results)
+  log.info("Alert results for job_id=%s risk_id=%s result_id=%s written to collection risk_results" % (job_id, risk_id, str(result_id)))
 
+# Get current Risk Score
 risk_object_value = results['fields'][0][risk_config["risk_object"]]
+key, current_risk_score = getRiskScore(risk_object_value)
 
-current_risk_score = getRiskScore(risk_object_value)
+log.info("key=%s risk_object=%s risk_object_value=%s risk_score=%s" % (key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"]))
 
-log.info("risk_object_value=%s risk_score=%s" % (risk_object_value, risk_config["risk_score"]))
+updateRiskScore(key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"], current_risk_score)
