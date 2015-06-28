@@ -1,14 +1,40 @@
 <dashboard>
-  <label>risk_overview</label>
+  <label>Risk Overview</label>
   <row>
     <panel>
       <table>
-        <title>Top 10 Risk Objects</title>
+        <title>Risk Objects - Top 10</title>
         <search>
-          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object</query>
-          <earliest></earliest>
+          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |sort 10 -risk_score</query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="count">10</option>
+        <option name="link.visible">false</option>
+        <drilldown>
+            <link>/app/risk_manager/risk_search?form.risk_object_token=$row.risk_object$&amp;form.risk_object_type_token=$row.risk_object_type$</link>
+        </drilldown>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Risk Events - Top 10</title>
+        <search>
+          <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |rename sparkline as trend  |sort 10 -count</query>
+          <earliest>0</earliest>
           <latest></latest>
         </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="count">10</option>
+        <option name="link.visible">false</option>
+        <drilldown>
+            <link>/app/risk_manager/risk_search?form.risk_object_token=$row.risk_object$&amp;form.risk_object_type_token=$row.risk_object_type$</link>
+        </drilldown>
       </table>
     </panel>
   </row>

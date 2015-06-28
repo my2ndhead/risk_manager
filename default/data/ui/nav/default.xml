@@ -1,9 +1,11 @@
 <nav search_view="search" color="#D25B3B">
-  <view name="search" default='true' />
-  <view name="Risk Overview"/>
+  <view name="risk_overview" default='true'/>
   <collection label="Reports">
         <view name="risk_analyzer"/>
         <view name="risk_search"/>
+  </collection>
+  <collection label="Pivot">
+    <a href="pivot?model=%2FservicesNS%2Fnobody%2Frisk_manager%2Fdatamodel%2Fmodel%2Frisk_manager&amp;object=All_Risks_Events">All Risks Events</a>
   </collection>
   <collection label="Settings">
 	<a href="/manager/risk_manager/apps/local/risk_manager/setup?action=edit">Global Settings</a>
@@ -11,4 +13,5 @@
   </collection>
   <collection label="Help" >
   </collection>
+  <view name="search" />
 </nav>

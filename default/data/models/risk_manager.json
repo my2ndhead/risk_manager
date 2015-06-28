@@ -134,7 +134,30 @@
                     "fieldSearch": ""
                 }
             ],
-            "calculations": [],
+            "calculations": [
+                {
+                    "outputFields": [
+                        {
+                            "fieldName": "risk_score_delta",
+                            "owner": "All_Risks_Events",
+                            "type": "number",
+                            "required": false,
+                            "multivalue": false,
+                            "hidden": false,
+                            "editable": true,
+                            "displayName": "risk_score_delta",
+                            "comment": "",
+                            "fieldSearch": ""
+                        }
+                    ],
+                    "calculationID": "bgxxzz98429be29",
+                    "owner": "All_Risks_Events",
+                    "editable": true,
+                    "comment": "",
+                    "calculationType": "Eval",
+                    "expression": "risk_score-previous_risk_score"
+                }
+            ],
             "constraints": [
                 {
                     "search": "index=\"risks\" sourcetype=\"risk_scoring\"",
