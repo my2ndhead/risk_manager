@@ -89,7 +89,7 @@
       <table id="risk_contributing_data" depends="$risk_id_token$">
         <title>Risk Details</title>
         <search>
-          <query>| inputlookup risk_results |search risk_id="$risk_id_token$" |rename fields.* AS *| table _time, *,_* |sort +_time</query>
+          <query>| loadriskresults $risk_id_token$</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
