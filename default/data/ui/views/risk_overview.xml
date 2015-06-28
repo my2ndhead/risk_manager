@@ -1,0 +1,15 @@
+<dashboard>
+  <label>risk_overview</label>
+  <row>
+    <panel>
+      <table>
+        <title>Top 10 Risk Objects</title>
+        <search>
+          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object</query>
+          <earliest></earliest>
+          <latest></latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</dashboard>

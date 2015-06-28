@@ -62,20 +62,23 @@ def getRiskScore(risk_object):
         log.info("Found risk_object %s" % risk_object)
         key = risk[0]['_key']
         risk_score = int(risk[0]['risk_score'])
+        if (risk_score < 0):
+	    risk_score = 0
+
         return key, risk_score 
     else:
         log.info("No risks_object %s found, switching back to defaults." % alert)
         return "null" ,0
 
 # Update risk score for risk object
-def updateRiskScore(key, risk_object_field, risk_object, risk_score , current_risk_score):
+def updateRiskScore(key, risk_object_type, risk_object, risk_score , current_risk_score):
     risk = {}
     log.debug("Risk Score: %s" % risk_score) 
     log.debug("Current Risk Score: %s" % current_risk_score) 
     risk_score = int(risk_score) + current_risk_score
 
     #risk['_key'] = key
-    risk['risk_object_field'] = risk_object_field
+    risk['risk_object_type'] = risk_object_type
     risk['risk_object'] = risk_object
     risk['risk_score'] = risk_score
   
@@ -88,13 +91,25 @@ def updateRiskScore(key, risk_object_field, risk_object, risk_score , current_ri
     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_scoring)  
     log.debug("Risk Score updated to collection: %s" % risk_scoring) 
 
+def writeRiskScoringEventToIndex(risk_id, alert, job_id, risk_object_type, risk_object, risk_score , current_risk_score):
+    log.info("Attempting Risk Scoring Event write to index=%s" % config['index'])
+    now = datetime.datetime.now().isoformat()
+    risk_score = risk_score + current_risk_score
+    if (risk_score < 0):
+        risk_score = 0
+
+    risk_scoring_event=('time="%s" risk_id="%s" alert="%s" job_id="%s" action="update_risk_score" risk_object_type="%s" risk_object="%s" risk_score="%s" previous_risk_score="%s"' % (now, risk_id, alert, job_id, risk_object_type, risk_object, risk_score , current_risk_score))
+
+    input.submit(risk_scoring_event, hostname = socket.gethostname(), sourcetype = 'risk_scoring', source = 'risk_handler.py', index = config['index'])
+    log.info("Risk Scoring Event written to index=%s" % config['index'])
+
 # Write risk_result to collection
 def writeResultToCollection(results):
     risk_result = json.dumps(results)
     log.debug("Result: %s" % risk_result)
     uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risk_results'
     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=risk_result)
-    log.debug("results for risk_id=%s written to collection." % (risk_id))
+    log.debug("Results for risk_id=%s written to collection." % (risk_id))
 
 
 # Init
@@ -164,11 +179,9 @@ log.debug("Parsed global risk handler settings: %s" % json.dumps(config))
 # Get per risk settings
 #
 risk_config = {}
-risk_config['title']                   = ''
 risk_config['risk_object']             = ''
 risk_config['risk_score']              = ''
 risk_config['collect_contributing_data']        = False
-risk_config['encrypt']        = False
 query = {}
 query['alert'] = alert
 log.debug("Query for alert settings: %s" % urllib.quote(json.dumps(query)))
@@ -237,6 +250,18 @@ if (risk_config['collect_contributing_data'] == True):
 risk_object_value = results['fields'][0][risk_config["risk_object"]]
 key, current_risk_score = getRiskScore(risk_object_value)
 
-log.info("key=%s risk_object=%s risk_object_value=%s risk_score=%s" % (key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"]))
+log.debug("key=%s risk_object=%s risk_object_value=%s risk_score=%s" % (key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"]))
 
 updateRiskScore(key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"], current_risk_score)
+
+writeRiskScoringEventToIndex(risk_id, alert, job_id, risk_config["risk_object"], risk_object_value, int(risk_config["risk_score"]), current_risk_score)
+
+# Done creating risks
+
+#
+# Finish
+#
+end = time.time()
+duration = round((end-start), 3)
+log.info("Risk handler finished. duration=%ss" % duration)
+

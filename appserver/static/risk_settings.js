@@ -37,7 +37,7 @@ require([
 
         // Remove empty rows
         var data = _.filter(data, function(entry){ 
-            return entry['alert'] != null || entry['title'] != null || entry['risk_object'] != null || entry['risk_score'] != null || entry['collect_contributing_data'] != null || entry['encrypt'] != null;
+            return entry['alert'] != null || entry['risk_object'] != null || entry['risk_score'] != null || entry['collect_contributing_data'] != null;
         });
 
         // validate data

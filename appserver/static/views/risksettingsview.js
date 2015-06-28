@@ -49,14 +49,12 @@ define(function(require, exports, module) {
 
             headers = [ { col: "_key", tooltip: false }, 
                         { col: "alert", tooltip: false },
-                        { col: "title", tooltip: "Configure a title better identification" },
                         { col: "risk_object", tooltip: "Select an object (field) for scoring risk, e.g. user, host etc." },
                         { col: "risk_score", tooltip: "Select a risk score. May also be negative"},
-                        { col: "collect_contributing_data", tooltip: "Select, if contributing data should be collected"},
-                        { col: "encrypt", tooltip: "Select, if all data should be encrypted"} ];
+                        { col: "collect_contributing_data", tooltip: "Select, if contributing data should be collected"} ];
             $("#handson_container").handsontable({
                 data: data,
-                //colHeaders: ["_key", "alert", "risk_object", "risk_score", "collect_contributing_data", "encrypt"],
+                //colHeaders: ["_key", "alert", "risk_object", "risk_score", "collect_contributing_data"],
                 columns: [
                     {
                         data: "_key",
@@ -66,9 +64,6 @@ define(function(require, exports, module) {
                         data: "alert",
                     },
                     {
-                        data: "title",
-                    },
-                    {
                         data: "risk_object",
                     },
                     {
@@ -76,10 +71,6 @@ define(function(require, exports, module) {
                     },
                     {
                         data: "collect_contributing_data",
-                        type: "checkbox"
-                    },
-                    {
-                        data: "encrypt",
                         type: "checkbox"
                     },
 
@@ -171,11 +162,9 @@ define(function(require, exports, module) {
                 return {
                     _key: val.key,
                     alert: val.alert, 
-                    title: val.title,
                     risk_object: val.risk_object,
                     risk_score: val.risk_score, 
                     collect_contributing_data: parseInt(val.collect_contributing_data) ? true : false, 
-                    encrypt: parseInt(val.encrypt) ? true : false, 
                 };
             }).each(function(line) {
                 myData.push(line);        
