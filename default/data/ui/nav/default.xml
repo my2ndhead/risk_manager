@@ -10,6 +10,7 @@
   <collection label="Settings">
 	<a href="/manager/risk_manager/apps/local/risk_manager/setup?action=edit">Global Settings</a>
         <view name="risk_settings" />
+        <view name="risk_score_tuner" />
   </collection>
   <collection label="Help" >
   </collection>
