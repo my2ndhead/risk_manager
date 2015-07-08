@@ -26,8 +26,6 @@ dir = os.path.join(util.get_apps_dir(), 'risk_manager', 'bin', 'lib')
 if not dir in sys.path:
     sys.path.append(dir)    
 
-from AlertManagerUsers import *
-
 #sys.stdout = open('/tmp/stdout2', 'w')
 #sys.stderr = open('/tmp/stderr2', 'w')    
 
