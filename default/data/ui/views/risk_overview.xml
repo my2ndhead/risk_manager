@@ -1,4 +1,4 @@
-<form>
+<form script="risk_overview.js" stylesheet="risk_overview.css">
   <label>Risk Overview</label>
   <fieldset submitButton="true" autoRun="true">
     <input type="time" token="timerange">
@@ -42,45 +42,49 @@
   </fieldset>
   <row>
     <panel>
-      <single>
+      <single id="sv_risk_objects">
         <title>Risk Objects</title>
         <search>
-          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$ |stats dc(risk_object)</query>
+          <query>| tstats dc(All_Risks_Events.risk_object) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats dc(All_Risks_Events.risk_object) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" earliest=-48h latest=-24h | eval joiner="joiner" ] | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
-        <option name="linkView">search</option>
+        <option name="field">value</option>
+        <option name="trendField">trend</option>
       </single>
-      <single>
+      <single id="sv_risk_score">
         <title>Average Risk Score</title>
         <search>
-          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$ |stats avg(risk_score) as risk_score | eval risk_score=round(risk_score)</query>
+          <query>| tstats avg(All_Risks_Events.risk_score) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats avg(All_Risks_Events.risk_score) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value | foreach trend, value, trend_value [eval &lt;&lt;FIELD&gt;&gt;=round(&lt;&lt;FIELD&gt;&gt;,0)]</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
-        <option name="linkView">search</option>
+        <option name="field">value</option>
+        <option name="trendField">trend</option>
       </single>
-      <single>
+      <single id="sv_total_risk_score">
         <title>Total Risk Score</title>
         <search>
-          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$| dedup risk_object_type, risk_object |stats sum(risk_score) as risk_score | eval risk_score=round(risk_score)</query>
+          <query>| tstats sum(All_Risks_Events.risk_score) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats sum(All_Risks_Events.risk_score) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value |</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
-        <option name="linkView">search</option>
+        <option name="field">value</option>
+        <option name="trendField">trend</option>
       </single>
-      <single>
+      <single id="sv_alert_searches">
         <title>Alert Searches</title>
         <search>
-          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$  alert=$alert_token$|stats dc(alert)</query>
+          <query>| tstats dc(All_Risks_Events.alert) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats dc(All_Risks_Events.alert) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value |</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
-        <option name="linkView">search</option>
+        <option name="field">value</option>
+        <option name="trendField">trend</option>
       </single>
     </panel>
   </row>
