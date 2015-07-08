@@ -1,0 +1,125 @@
+<form>
+  <label>Risk Overview</label>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="time" token="timerange">
+      <label>Time Range:</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="risk_object_type_token" searchWhenChanged="true">
+      <label>Risk Object Type:</label>
+      <search>
+        <query>| tstats count from datamodel="risk_manager" groupby All_Risks_Events.risk_object_type</query>
+      </search>
+      <fieldForLabel>All_Risks_Events.risk_object_type</fieldForLabel>
+      <fieldForValue>All_Risks_Events.risk_object_type</fieldForValue>
+      <default>*</default>
+      <choice value="*">All</choice>
+    </input>
+    <input type="dropdown" token="risk_object_token" searchWhenChanged="true">
+      <label>Risk Object:</label>
+      <search>
+        <query>| tstats count from datamodel="risk_manager" groupby All_Risks_Events.risk_object, All_Risks_Events.risk_object_type | search All_Risks_Events.risk_object_type="$risk_object_type_token$"</query>
+        <earliest>0</earliest>
+      </search>
+      <fieldForLabel>All_Risks_Events.risk_object</fieldForLabel>
+      <fieldForValue>All_Risks_Events.risk_object</fieldForValue>
+      <choice value="*">All</choice>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="alert_token">
+      <label>Alert Search:</label>
+      <choice value="*">All</choice>
+      <search>
+        <query>| tstats count from datamodel="risk_manager" groupby All_Risks_Events.alert</query>
+      </search>
+      <fieldForLabel>All_Risks_Events.alert</fieldForLabel>
+      <fieldForValue>All_Risks_Events.alert</fieldForValue>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Risk Objects</title>
+        <search>
+          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$ |stats dc(risk_object)</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+      </single>
+      <single>
+        <title>Average Risk Score</title>
+        <search>
+          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$ |stats avg(risk_score) as risk_score | eval risk_score=round(risk_score)</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+      </single>
+      <single>
+        <title>Total Risk Score</title>
+        <search>
+          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$ alert=$alert_token$| dedup risk_object_type, risk_object |stats sum(risk_score) as risk_score | eval risk_score=round(risk_score)</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+      </single>
+      <single>
+        <title>Alert Searches</title>
+        <search>
+          <query>index=risks index=risks sourcetype=risk_scoring risk_object_type=$risk_object_type_token$ risk_object=$risk_object_token$  alert=$alert_token$|stats dc(alert)</query>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Risk Objects - Top 10</title>
+        <search>
+          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |sort 10 -risk_score</query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="count">10</option>
+        <option name="link.visible">false</option>
+        <drilldown>
+          <link>/app/risk_manager/risk_search?form.risk_object_token=$row.risk_object$&amp;form.risk_object_type_token=$row.risk_object_type$</link>
+        </drilldown>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Risk Events - Top 10</title>
+        <search>
+          <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |rename sparkline as trend  |sort 10 -count</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="count">10</option>
+        <option name="link.visible">false</option>
+        <drilldown>
+          <link>/app/risk_manager/risk_search?form.risk_object_token=$row.risk_object$&amp;form.risk_object_type_token=$row.risk_object_type$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+</form>

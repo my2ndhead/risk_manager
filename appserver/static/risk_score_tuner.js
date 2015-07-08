@@ -37,12 +37,12 @@ require([
 
         // Remove empty rows
         var data = _.filter(data, function(entry){ 
-            return entry['alert'] != null || entry['risk_object'] != null || entry['risk_score'] != null || entry['collect_contributing_data'] != null;
+            return entry['risk_score'] != null;
         });
 
         // validate data
         var check = _.filter(data, function(entry){ 
-            return entry['alert']== null || entry['risk_object']== null || entry['risk_score'] == null;
+            return entry['risk_score'] != null;
         });
         console.debug("check", check);
         if (check.length>0) {
@@ -72,7 +72,7 @@ require([
                 contents    : data
             };
 
-            var url = splunkUtil.make_url('/custom/risk_manager/risk_settings/save');
+            var url = splunkUtil.make_url('/custom/risk_manager/risk_score_tuner/save');
             console.debug("post_data", post_data);
 
             $.ajax( url,
@@ -84,7 +84,7 @@ require([
                        
                         success: function(jqXHR, textStatus){
                             // Reload the table
-                            mvc.Components.get("risk_settings_search").startSearch()
+                            mvc.Components.get("risk_score_tuner_search").startSearch()
                             console.debug("success");
                         },
                         
