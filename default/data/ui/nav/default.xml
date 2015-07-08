@@ -1,4 +1,4 @@
-<nav search_view="search" color="#D25B3B">
+<nav search_view="search" color="#eb5217">
   <view name="risk_overview" default='true'/>
   <collection label="Reports">
         <view name="risk_analyzer"/>
