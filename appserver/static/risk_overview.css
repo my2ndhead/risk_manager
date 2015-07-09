@@ -1,5 +1,5 @@
 #sv_risk_objects {
-  background: #A22E90;
+  background: #156877;
   
 }
 #sv_risk_objects .single-value, #creates .single-drilldown, #creates .single-value .under-label {
@@ -13,7 +13,7 @@
 }
 
 #sv_risk_score {
-  background: #4596A5;
+  background: #2B7D8C;
   
 }
 #sv_risk_score .single-value, #creates .single-drilldown, #creates .single-value .under-label {
@@ -27,7 +27,7 @@
 }
 
 #sv_total_risk_score {
-  background: #6db7c6;
+  background: #6EB3C0;
   
 }
 #sv_total_risk_score .single-value, #creates .single-drilldown, #creates .single-value .under-label {
@@ -41,7 +41,7 @@
 }
 
 #sv_alert_searches {
-  background: #4BB884;
+  background: #A4D6DF;
   
 }
 #sv_alert_searches .single-value, #creates .single-drilldown, #creates .single-value .under-label {
