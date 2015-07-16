@@ -13,6 +13,9 @@
         <view name="risk_score_tuner" />
   </collection>
   <collection label="Help" >
+    <a href="https://github.com/my2ndhead/risk_manager/wiki" target="_blank">About</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/Installation-Guide" target="_blank">Installation Guide</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/Configuration-Guide" target="_blank">Configuration Guide</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/User-Guide" target="_blank">User Guide</a>
   </collection>
-  <view name="search" />
 </nav>
