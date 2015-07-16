@@ -44,11 +44,11 @@ Libraries and snippets:
 - **This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.** [1]
 - **Commercial Use, Excerpt from CC BY-NC-SA 4.0:**
   - "A commercial use is one primarily intended for commercial advantage or monetary compensation."
-- **In case of Support Add-on for Hyperbaseline this translates to:**
-  - You may use Support Add-on for Hyperbaseline in commercial environments for handling in-house Splunk alerts
-  - You may use Support Add-on for Hyperbaseline as part of your consulting or integration work, if you're considered to be working on behalf of your customer. The customer will be the licensee of Support Add-on for Hyperbaseline and must comply according to the license terms
-  - You are not allowed to sell Support Add-on for Hyperbaseline as a standalone product or within an application bundle
-  - If you want to use Support Add-on for Hyperbaseline outside of these license terms, please contact us and we will find a solution
+- **In case of Risk Manager this translates to:**
+  - You may use Risk Manager in commercial environments for handling in-house Splunk alerts
+  - You may use Risk Manager as part of your consulting or integration work, if you're considered to be working on behalf of your customer. The customer will be the licensee of Risk Manager and must comply according to the license terms
+  - You are not allowed to sell Risk Manager as a standalone product or within an application bundle
+  - If you want to use Risk Manager outside of these license terms, please contact us and we will find a solution
 
 ## References
 [1] http://creativecommons.org/licenses/by-nc-sa/4.0/
