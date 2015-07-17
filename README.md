@@ -1,5 +1,5 @@
 # Alert Manager
-- **Authors**:		Simon Balz <simon@balz.me>, Mika Borner <mika.borner@gmail.com>, Christoph Dittmann <mulibu.flyingk@googlemail.com>, $Harun Kuessner <h.huessner@posteo.de>
+- **Authors**:		Simon Balz <simon@balz.me>, Mika Borner <mika.borner@gmail.com>, Christoph Dittmann <mulibu.flyingk@googlemail.com>, Harun Kuessner <h.huessner@posteo.de>
 - **Description**:	Risk Manager
 - **Version**: 		1.0
 
@@ -20,15 +20,15 @@ The Risk Manager adds risk scoring functionality to Splunk.
 -Risk Manager is part of the Hyperthreat-Suite
 
 ## Release Notes
-- **v1.0**	/	2015-06-13
+- **v1.0**	/	2015-07-19
 	- First release
 
 - **v0.1**	/	2015-06-14
-	- First checkin
+	- First check in
 
 ## Changelog
-- **2015-06-14** mika.borner@gmail.com
-	- First checkin
+- **2015-07-19** mika.borner@gmail.com
+	- First Release
 
 ## Credits
 Libraries and snippets:
@@ -40,6 +40,9 @@ Libraries and snippets:
 - Technology Add-on for Risk Manager
 - If encryption is used, (Support Add-on for SA-hypercrypt)
 
+## Documentation
+- Homepage: https://github.com/my2ndhead/risk_manager
+- Wiki: https://github.com/my2ndhead/risk_manager/wiki
 ## License
 - **This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.** [1]
 - **Commercial Use, Excerpt from CC BY-NC-SA 4.0:**
