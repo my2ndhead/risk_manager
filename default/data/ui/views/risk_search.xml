@@ -80,6 +80,7 @@
         <option name="link.visible">false</option>
         <drilldown>
           <set token="risk_id_token">$row.risk_id$</set>
+          <unset token="decrypt_command"/>
         </drilldown>
         <fields>["_time","risk_object_type","risk_object","alert", "risk_score_delta", "risk_score"]</fields>
       </table>
@@ -90,7 +91,28 @@
       <table id="risk_contributing_data" depends="$risk_id_token$">
         <title>Risk Details</title>
         <search>
-          <query>| loadriskresults $risk_id_token$</query>
+          <query>| loadriskresults $risk_id_token$ |table _time, * </query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="drilldown">row</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="count">10</option>
+        <option name="link.visible">false</option>
+        <drilldown>
+          <set token="decrypt_command">$row.decrypt_command$</set>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table id="risk_contributing_data_decrypted" depends="$decrypt_command$">
+        <title>Risk Details (Decrypted)</title>
+        <search>
+          <query>| loadriskresults $risk_id_token$ | $decrypt_command$ | table _time, * </query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
