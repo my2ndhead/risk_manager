@@ -8,10 +8,14 @@ import re
 import time
 import datetime
 import urllib
+import socket
+import hashlib
 
 #from splunk import AuthorizationFailed as AuthorizationFailed
+import splunk
 import splunk.appserver.mrsparkle.controllers as controllers
 import splunk.appserver.mrsparkle.lib.util as util
+import splunk.input as input
 import splunk.bundle as bundle
 import splunk.entity as entity
 from splunk.appserver.mrsparkle.lib import jsonresponse
@@ -98,8 +102,19 @@ class Helpers(controllers.BaseController):
 
         user = cherrypy.session['user']['name']
         sessionKey = cherrypy.session.get('sessionKey')
+        splunk.setDefault('sessionKey', sessionKey)
         
+
+        config = {}
+        config['index'] = 'risks'
         
+        restconfig = entity.getEntities('configs/risk_manager', count=-1, sessionKey=sessionKey)
+        if len(restconfig) > 0:
+            if 'index' in restconfig['settings']:
+                config['index'] = restconfig['settings']['index']
+
+        logger.debug("Global settings: %s" % config)
+
         # Parse the JSON
         parsed_contents = json.loads(contents)
 
@@ -108,25 +123,18 @@ class Helpers(controllers.BaseController):
         for entry in parsed_contents:
             if '_key' in entry and entry['_key'] != None:
                 uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/' + entry['_key']
-                logger.debug("uri is %s" % uri)
+                #logger.debug("uri is %s" % uri)
 
+                key = entry['_key']
                 del entry['_key']
-                entry = json.dumps(entry)
+                entryStr = json.dumps(entry)
 
-                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entry)
-                logger.debug("Updated entry. serverResponse was %s" % serverResponse)
-            else:
-                if '_key' in entry:
-                    del entry['_key']
-                ['' if val is None else val for val in entry]
+                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entryStr)
+                logger.debug("Updated entry. serverResponse was ok")
 
-                uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/'
-                logger.debug("uri is %s" % uri)
-
-                entry = json.dumps(entry)
-                logger.debug("entry is %s" % entry)
-
-                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entry)
-                logger.debug("Added entry. serverResponse was %s" % serverResponse)
+                now = datetime.datetime.now().isoformat()
+                event = 'time=%s action="update_risk_score" type="risk_tuner" key="%s" user="%s" risk_object_type="%s" risk_object="%s" risk_score="%s"' % (now, key, user, entry['risk_object_type'], entry['risk_object'], entry['risk_score'])
+                logger.debug("Event will be: %s" % event)
+                input.submit(event, hostname = socket.gethostname(), sourcetype = 'risk_scoring', source = 'helpers.py', index = config['index'])
 
         return 'Data has been saved'
