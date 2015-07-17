@@ -35,15 +35,11 @@ require([
         var data = $("#handson_container").data('handsontable').getData();
         console.debug("save data", data);
 
-        // Remove empty rows
-        var data = _.filter(data, function(entry){ 
-            return entry['risk_score'] != null;
-        });
-
         // validate data
         var check = _.filter(data, function(entry){ 
-            return entry['risk_score'] != null;
+            return entry['risk_score'] == null;
         });
+
         console.debug("check", check);
         if (check.length>0) {
             var modal = ''+
@@ -72,7 +68,7 @@ require([
                 contents    : data
             };
 
-            var url = splunkUtil.make_url('/custom/risk_manager/risk_score_tuner/save');
+            var url = splunkUtil.make_url('/custom/risk_manager/helpers/save_risks');
             console.debug("post_data", post_data);
 
             $.ajax( url,

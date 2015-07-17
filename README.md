@@ -1,4 +1,4 @@
-# Alert Manager
+# Risk Manager
 - **Authors**:		Simon Balz <simon@balz.me>, Mika Borner <mika.borner@gmail.com>, Christoph Dittmann <mulibu.flyingk@googlemail.com>, Harun Kuessner <h.huessner@posteo.de>
 - **Description**:	Risk Manager
 - **Version**: 		1.0

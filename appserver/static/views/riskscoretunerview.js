@@ -60,14 +60,15 @@ define(function(require, exports, module) {
                     },
                     {
                         data: "risk_object_type",
-			readOnly: true
+			            readOnly: true
                     },
                     {
                         data: "risk_object",
-			readOnly: true
+			            readOnly: true
                     },
                     {
                         data: "risk_score",
+                        type: 'numeric'
                     },
 
                 ],

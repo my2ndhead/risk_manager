@@ -90,3 +90,43 @@ class Helpers(controllers.BaseController):
             return savedSearchContent["entry"][0]["content"]["description"]
         else:
             return ""
+
+    @expose_page(must_login=True, methods=['POST']) 
+    def save_risks(self, contents, **kwargs):
+
+        logger.info("Saving risks...")
+
+        user = cherrypy.session['user']['name']
+        sessionKey = cherrypy.session.get('sessionKey')
+        
+        
+        # Parse the JSON
+        parsed_contents = json.loads(contents)
+
+        logger.debug("Contents: %s" % contents)
+
+        for entry in parsed_contents:
+            if '_key' in entry and entry['_key'] != None:
+                uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/' + entry['_key']
+                logger.debug("uri is %s" % uri)
+
+                del entry['_key']
+                entry = json.dumps(entry)
+
+                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entry)
+                logger.debug("Updated entry. serverResponse was %s" % serverResponse)
+            else:
+                if '_key' in entry:
+                    del entry['_key']
+                ['' if val is None else val for val in entry]
+
+                uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/'
+                logger.debug("uri is %s" % uri)
+
+                entry = json.dumps(entry)
+                logger.debug("entry is %s" % entry)
+
+                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entry)
+                logger.debug("Added entry. serverResponse was %s" % serverResponse)
+
+        return 'Data has been saved'
