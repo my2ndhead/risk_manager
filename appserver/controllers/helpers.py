@@ -117,24 +117,33 @@ class Helpers(controllers.BaseController):
 
         # Parse the JSON
         parsed_contents = json.loads(contents)
-
         logger.debug("Contents: %s" % contents)
 
         for entry in parsed_contents:
             if '_key' in entry and entry['_key'] != None:
+
                 uri = '/servicesNS/nobody/risk_manager/storage/collections/data/risks/' + entry['_key']
-                #logger.debug("uri is %s" % uri)
+                
+                # Get current risk
+                serverResponse, risk = rest.simpleRequest(uri, sessionKey=sessionKey)
+                logger.debug("Current risk: %s" % risk)
+                risk = json.loads(risk)
 
-                key = entry['_key']
-                del entry['_key']
-                entryStr = json.dumps(entry)
+                # Update risk if score has changed
+                if int(risk['risk_score']) != int(entry['risk_score']):
+                    logger.info("Updating risk_object_type=%s risk_object=%s to score=%s." % (entry['risk_object_type'], entry['risk_object'], entry['risk_score']))
+                    del entry['_key']
+                    entry['risk_id'] = risk['risk_id']
+                    entryStr = json.dumps(entry)
 
-                serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entryStr)
-                logger.debug("Updated entry. serverResponse was ok")
+                    serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entryStr)
+                    logger.debug("Updated entry. serverResponse was ok")
 
-                now = datetime.datetime.now().isoformat()
-                event = 'time=%s action="tune_risk_score" key="%s" user="%s" risk_object_type="%s" risk_object="%s" risk_score="%s" alert="Risk Score Tuner" risk_id="N/A"' % (now, key, user, entry['risk_object_type'], entry['risk_object'], entry['risk_score'])
-                logger.debug("Event will be: %s" % event)
-                input.submit(event, hostname = socket.gethostname(), sourcetype = 'risk_scoring', source = 'helpers.py', index = config['index'])
+                    now = datetime.datetime.now().isoformat()
+                    event = 'time="%s" risk_id="%s" action="update_risk_score" alert="Risk Score Tuner" user="%s" risk_object_type="%s" risk_object="%s" risk_score="%s" previous_risk_score="%s"' % (now, risk['risk_id'], user, entry['risk_object_type'], entry['risk_object'], entry['risk_score'], risk['risk_score'])
+                    logger.debug("Event will be: %s" % event)
+                    input.submit(event, hostname = socket.gethostname(), sourcetype = 'risk_scoring', source = 'helpers.py', index = config['index'])
+                else:
+                    logger.info("Won't update risk_object_type=%s risk_object=%s, since score didn't change." % (entry['risk_object_type'], entry['risk_object']))
 
-        return 'Data has been saved'
+        return 'Done'
