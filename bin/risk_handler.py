@@ -71,13 +71,14 @@ def getRiskScore(risk_object):
         return "null" ,0
 
 # Update risk score for risk object
-def updateRiskScore(key, risk_object_type, risk_object, risk_score , current_risk_score):
+def updateRiskScore(key, risk_id, risk_object_type, risk_object, risk_score , current_risk_score):
     risk = {}
     log.debug("Risk Score: %s" % risk_score) 
     log.debug("Current Risk Score: %s" % current_risk_score) 
     risk_score = int(risk_score) + current_risk_score
 
     #risk['_key'] = key
+    risk['risk_id'] = risk_id
     risk['risk_object_type'] = risk_object_type
     risk['risk_object'] = risk_object
     risk['risk_score'] = risk_score
@@ -252,7 +253,7 @@ key, current_risk_score = getRiskScore(risk_object_value)
 
 log.debug("key=%s risk_object=%s risk_object_value=%s risk_score=%s" % (key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"]))
 
-updateRiskScore(key, risk_config["risk_object"], risk_object_value, risk_config["risk_score"], current_risk_score)
+updateRiskScore(key, risk_id, risk_config["risk_object"], risk_object_value, risk_config["risk_score"], current_risk_score)
 
 writeRiskScoringEventToIndex(risk_id, alert, job_id, risk_config["risk_object"], risk_object_value, int(risk_config["risk_score"]), current_risk_score)
 
