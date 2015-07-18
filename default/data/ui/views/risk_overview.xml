@@ -106,6 +106,8 @@
         </drilldown>
       </table>
     </panel>
+  </row>
+  <row>
     <panel>
       <table>
         <title>Current Risk Events - Top 10</title>
