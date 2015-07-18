@@ -45,7 +45,7 @@
       <chart>
         <title>Risk Score over Time</title>
         <search>
-          <query>| tstats avg(All_Risks_Events.risk_score)  as risk_score from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" AND All_Risks_Events.alert="$alert_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.* as * |timechart avg(risk_score) as risk_score by risk_object</query>
+          <query>| tstats avg(All_Risks_Events.risk_score)  as risk_score from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" AND All_Risks_Events.alert="$alert_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.* as * |timechart useother=false avg(risk_score) as risk_score by risk_object</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
@@ -69,7 +69,7 @@
         <option name="charting.drilldown">all</option>
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">Risk Score</option>
         <option name="charting.axisTitleX.text">Time</option>
         <option name="link.visible">false</option>
@@ -84,7 +84,7 @@
       <chart>
         <title>Risk Events over Time</title>
         <search>
-          <query>| tstats count from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.risk_object as risk_object |timechart sum(count) by risk_object</query>
+          <query>| tstats count from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.risk_object as risk_object |timechart useother=false sum(count) by risk_object</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
@@ -108,7 +108,7 @@
         <option name="charting.drilldown">all</option>
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">Risk Events</option>
         <option name="charting.axisTitleX.text">Time</option>
         <option name="link.visible">false</option>
