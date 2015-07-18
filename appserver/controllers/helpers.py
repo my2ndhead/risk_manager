@@ -140,7 +140,7 @@ class Helpers(controllers.BaseController):
                     logger.debug("Updated entry. serverResponse was ok")
 
                     now = datetime.datetime.now().isoformat()
-                    event = 'time="%s" risk_id="%s" action="update_risk_score" type="risk_tuner" user="%s" risk_object_type="%s" risk_object="%s" risk_score="%s" previous_risk_score="%s"' % (now, risk['risk_id'], user, entry['risk_object_type'], entry['risk_object'], entry['risk_score'], risk['risk_score'])
+                    event = 'time="%s" risk_id="%s" action="update_risk_score" alert="Risk Score Tuner" user="%s" risk_object_type="%s" risk_object="%s" risk_score="%s" previous_risk_score="%s"' % (now, risk['risk_id'], user, entry['risk_object_type'], entry['risk_object'], entry['risk_score'], risk['risk_score'])
                     logger.debug("Event will be: %s" % event)
                     input.submit(event, hostname = socket.gethostname(), sourcetype = 'risk_scoring', source = 'helpers.py', index = config['index'])
                 else:

@@ -51,4 +51,11 @@ require([
 
     });
 
+    mvc.Components.get('risk_contributing_data_decrypted').getVisualization(function(tableView) {
+        // Add custom cell renderer
+        tableView.table.addCellRenderer(new HiddenCellRenderer());
+        tableView.table.render();
+
+    });
+
 });    

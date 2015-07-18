@@ -140,7 +140,7 @@
                         {
                             "fieldName": "risk_score_delta",
                             "owner": "All_Risks_Events",
-                            "type": "number",
+                            "type": "string",
                             "required": false,
                             "multivalue": false,
                             "hidden": false,
@@ -155,7 +155,7 @@
                     "editable": true,
                     "comment": "",
                     "calculationType": "Eval",
-                    "expression": "risk_score-previous_risk_score"
+                    "expression": "if(isint(previous_risk_score),risk_score-previous_risk_score,\"N/A\")"
                 }
             ],
             "constraints": [
