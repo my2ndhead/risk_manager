@@ -91,7 +91,7 @@
   <row>
     <panel>
       <table>
-        <title>Risk Objects - Top 10</title>
+        <title>Current Risk Objects - Top 10</title>
         <search>
           <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |sort 10 -risk_score</query>
         </search>
@@ -108,7 +108,7 @@
     </panel>
     <panel>
       <table>
-        <title>Risk Events - Top 10</title>
+        <title>Current Risk Events - Top 10</title>
         <search>
           <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |rename sparkline as trend  |sort 10 -count</query>
           <earliest>0</earliest>
