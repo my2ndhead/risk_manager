@@ -10,6 +10,7 @@ import datetime
 import urllib
 import socket
 import hashlib
+import uuid
 
 #from splunk import AuthorizationFailed as AuthorizationFailed
 import splunk
@@ -133,7 +134,10 @@ class Helpers(controllers.BaseController):
                 if int(risk['risk_score']) != int(entry['risk_score']):
                     logger.info("Updating risk_object_type=%s risk_object=%s to score=%s." % (entry['risk_object_type'], entry['risk_object'], entry['risk_score']))
                     del entry['_key']
-                    entry['risk_id'] = risk['risk_id']
+                    if 'risk_id' in risk:
+                        entry['risk_id'] = risk['risk_id']
+                    else:
+                        entry['risk_id'] = str(uuid.uuid4())
                     entryStr = json.dumps(entry)
 
                     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entryStr)
