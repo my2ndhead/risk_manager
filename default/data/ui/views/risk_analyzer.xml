@@ -45,7 +45,7 @@
       <chart>
         <title>Risk Score over Time</title>
         <search>
-          <query>| tstats avg(All_Risks_Events.risk_score)  as risk_score from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" AND All_Risks_Events.alert="$alert_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.* as * |timechart avg(risk_score) as risk_score by risk_object</query>
+          <query>| tstats avg(All_Risks_Events.risk_score)  as risk_score from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" AND All_Risks_Events.alert="$alert_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.* as * |timechart useother=false avg(risk_score) as risk_score by risk_object</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
@@ -58,7 +58,7 @@
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.enabled">false</option>
         <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
+        <option name="charting.chart">column</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -69,12 +69,12 @@
         <option name="charting.drilldown">all</option>
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">Risk Score</option>
         <option name="charting.axisTitleX.text">Time</option>
         <option name="link.visible">false</option>
         <drilldown>
-            <link>/app/risk_manager/risk_search?form.risk_object_token=$click.name2$&amp;form.risk_object_type_token=$risk_object_type_token$&amp;form.alert_token=$alert_token$</link>
+          <link>/app/risk_manager/risk_search?form.risk_object_token=$click.name2$&amp;form.risk_object_type_token=$risk_object_type_token$&amp;form.alert_token=$alert_token$</link>
         </drilldown>
       </chart>
     </panel>
@@ -84,7 +84,7 @@
       <chart>
         <title>Risk Events over Time</title>
         <search>
-          <query>| tstats count from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.risk_object as risk_object |timechart sum(count) by risk_object</query>
+          <query>| tstats count from datamodel="risk_manager" where All_Risks_Events.risk_object_type="$risk_object_type_token$" AND  All_Risks_Events.risk_object="$risk_object_token$" groupby _time, All_Risks_Events.risk_object | rename All_Risks_Events.risk_object as risk_object |timechart useother=false sum(count) by risk_object</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
@@ -97,7 +97,7 @@
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.axisY2.enabled">false</option>
         <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
+        <option name="charting.chart">column</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
@@ -108,12 +108,12 @@
         <option name="charting.drilldown">all</option>
         <option name="charting.layout.splitSeries">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
-        <option name="charting.legend.placement">right</option>
+        <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">Risk Events</option>
         <option name="charting.axisTitleX.text">Time</option>
         <option name="link.visible">false</option>
         <drilldown>
-            <link>/app/risk_manager/risk_search?form.risk_object_token=$click.name2$&amp;form.risk_object_type_token=$risk_object_type_token$&amp;form.alert_token=$alert_token$</link>
+          <link>/app/risk_manager/risk_search?form.risk_object_token=$click.name2$&amp;form.risk_object_type_token=$risk_object_type_token$&amp;form.alert_token=$alert_token$</link>
         </drilldown>
       </chart>
     </panel>
