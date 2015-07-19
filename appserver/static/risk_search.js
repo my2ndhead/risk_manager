@@ -40,7 +40,7 @@ require([
         },
         render: function($td, cell) {
             // ADD class to cell -> CSS
-            $td.addClass(cell.field).html(cell.value);
+            return _(['decrypt_command']).contains(cell.field);
         }
     });
 
