@@ -113,8 +113,8 @@
         <title>Current Risk Events - Top 10</title>
         <search>
           <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |search risk_object_type="$risk_object_type_token$" |rename sparkline as trend  |sort 10 -count</query>
-          <earliest>0</earliest>
-          <latest></latest>
+          <earliest>$timerange.earliest$</earliest>
+          <latest>$timerange.latest$</latest>
         </search>
         <option name="wrap">true</option>
         <option name="rowNumbers">false</option>
