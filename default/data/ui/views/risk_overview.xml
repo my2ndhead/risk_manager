@@ -93,7 +93,7 @@
       <table>
         <title>Current Risk Objects - Top 10</title>
         <search>
-          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |sort 10 -risk_score</query>
+          <query>|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |search risk_object_type="$risk_object_type_token$" | sort 10 -risk_score</query>
         </search>
         <option name="wrap">true</option>
         <option name="rowNumbers">false</option>
@@ -112,7 +112,7 @@
       <table>
         <title>Current Risk Events - Top 10</title>
         <search>
-          <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |rename sparkline as trend  |sort 10 -count</query>
+          <query>[|inputlookup risks |stats max(risk_score) as risk_score by risk_object_type, risk_object |fields risk_object ] index=risks |stats sparkline count by risk_object_type, risk_object |search risk_object_type="$risk_object_type_token$" |rename sparkline as trend  |sort 10 -count</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
