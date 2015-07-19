@@ -155,7 +155,7 @@
                     "editable": true,
                     "comment": "",
                     "calculationType": "Eval",
-                    "expression": "if(isint(previous_risk_score),risk_score-previous_risk_score,\"N/A\")"
+                    "expression": "risk_score-previous_risk_score"
                 }
             ],
             "constraints": [
