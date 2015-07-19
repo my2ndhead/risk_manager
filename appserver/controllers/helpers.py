@@ -138,6 +138,7 @@ class Helpers(controllers.BaseController):
                         entry['risk_id'] = risk['risk_id']
                     else:
                         entry['risk_id'] = str(uuid.uuid4())
+                        risk['risk_id'] = entry['risk_id']
                     entryStr = json.dumps(entry)
 
                     serverResponse, serverContent = rest.simpleRequest(uri, sessionKey=sessionKey, jsonargs=entryStr)
