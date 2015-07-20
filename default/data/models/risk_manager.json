@@ -1,0 +1,173 @@
+{
+    "modelName": "risk_manager",
+    "displayName": "Risk Manager",
+    "description": "",
+    "objectSummary": {
+        "Event-Based": 1,
+        "Transaction-Based": 0,
+        "Search-Based": 0
+    },
+    "objects": [
+        {
+            "objectName": "All_Risks_Events",
+            "displayName": "All Risks Events",
+            "parentName": "BaseEvent",
+            "fields": [
+                {
+                    "fieldName": "action",
+                    "owner": "All_Risks_Events",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "action",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "alert",
+                    "owner": "All_Risks_Events",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "alert",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "risk_object",
+                    "owner": "All_Risks_Events",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "risk_object",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "risk_object_type",
+                    "owner": "All_Risks_Events",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "risk_object_type",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "risk_score",
+                    "owner": "All_Risks_Events",
+                    "type": "number",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "risk_score",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "risk_id",
+                    "owner": "All_Risks_Events",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": true,
+                    "editable": true,
+                    "displayName": "risk_id",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "_time",
+                    "owner": "BaseEvent",
+                    "type": "timestamp",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "_time",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "host",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": true,
+                    "editable": true,
+                    "displayName": "host",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "source",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": true,
+                    "editable": true,
+                    "displayName": "source",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "sourcetype",
+                    "owner": "BaseEvent",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": true,
+                    "editable": true,
+                    "displayName": "sourcetype",
+                    "comment": "",
+                    "fieldSearch": ""
+                }
+            ],
+            "calculations": [
+                {
+                    "outputFields": [
+                        {
+                            "fieldName": "risk_score_delta",
+                            "owner": "All_Risks_Events",
+                            "type": "string",
+                            "required": false,
+                            "multivalue": false,
+                            "hidden": false,
+                            "editable": true,
+                            "displayName": "risk_score_delta",
+                            "comment": "",
+                            "fieldSearch": ""
+                        }
+                    ],
+                    "calculationID": "bgxxzz98429be29",
+                    "owner": "All_Risks_Events",
+                    "editable": true,
+                    "comment": "",
+                    "calculationType": "Eval",
+                    "expression": "risk_score-previous_risk_score"
+                }
+            ],
+            "constraints": [
+                {
+                    "search": "index=\"risks\" sourcetype=\"risk_scoring\"",
+                    "owner": "All_Risks_Events"
+                }
+            ],
+            "lineage": "All_Risks_Events"
+        }
+    ],
+    "objectNameList": [
+        "All_Risks_Events"
+    ]
+}

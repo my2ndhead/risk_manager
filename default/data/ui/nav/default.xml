@@ -1,0 +1,21 @@
+<nav search_view="search" color="#eb5217">
+  <view name="risk_overview" default='true'/>
+  <collection label="Reports">
+        <view name="risk_analyzer"/>
+        <view name="risk_search"/>
+  </collection>
+  <collection label="Pivot">
+    <a href="pivot?model=%2FservicesNS%2Fnobody%2Frisk_manager%2Fdatamodel%2Fmodel%2Frisk_manager&amp;object=All_Risks_Events">All Risks Events</a>
+  </collection>
+  <collection label="Settings">
+	<a href="/manager/risk_manager/apps/local/risk_manager/setup?action=edit">Global Settings</a>
+        <view name="risk_settings" />
+        <view name="risk_score_tuner" />
+  </collection>
+  <collection label="Help" >
+    <a href="https://github.com/my2ndhead/risk_manager/wiki" target="_blank">About</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/Installation-Guide" target="_blank">Installation Guide</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/Configuration-Guide" target="_blank">Configuration Guide</a>
+    <a href="https://github.com/my2ndhead/risk_manager/wiki/User-Guide" target="_blank">User Guide</a>
+  </collection>
+</nav>

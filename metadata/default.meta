@@ -1,0 +1,40 @@
+[]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+owner = nobody
+export = system
+
+[views]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = none
+owner = nobody
+version = 6.2.1
+
+[datamodels]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = none
+owner = nobody
+version = 6.2.1
+
+[models]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = none
+owner = nobody
+version = 6.2.1
+
+[transforms]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = system
+owner = nobody
+version = 6.2.1
+
+[nav]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = none
+owner = nobody
+version = 6.2.1
+
+[collections]
+access = read : [ admin, risk_manager ], write : [ admin, risk_manager ]
+export = system
+owner = nobody
+version = 6.2.1

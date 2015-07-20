@@ -1,0 +1,46 @@
+<form script="autodiscover.js, risk_score_tuner.js" stylesheet="risk_score_tuner.css">
+  <label>Risk Score Tuner</label>
+  <fieldset submitButton="false" autoRun="true"></fieldset>
+  <search id="risk_score_tuner_search">
+    <query>| inputlookup risks| search risk_object_type="$risk_object_type_token$" risk_object="$risk_object_token$" | eval key=_key | table key, risk_object_type, risk_object, risk_score</query>
+    <earliest>0</earliest>
+    <latest></latest>
+  </search>
+  <row>
+    <panel>
+      <html>
+        <b>Note:</b> Adjust Risk Scores here
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="dropdown" token="risk_object_type_token" searchWhenChanged="true">
+        <label>Risk Object Type Filter:</label>
+        <choice value="*">All</choice>
+        <search>
+          <query>| inputlookup risks | fields risk_object_type | dedup risk_object_type | sort risk_object_type</query>
+        </search>
+        <fieldForLabel>risk_object_type</fieldForLabel>
+        <fieldForValue>risk_object_type</fieldForValue>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="risk_object_token" searchWhenChanged="true">
+        <label>Risk Object Filter:</label>
+        <search>
+          <query>| inputlookup risks | search risk_object_type="$risk_object_type_token$" | fields risk_object | dedup risk_object | sort risk_object</query>
+          <earliest>-1m</earliest>
+          <latest>now</latest>
+        </search>
+        <fieldForLabel>risk_object</fieldForLabel>
+        <fieldForValue>risk_object</fieldForValue>
+        <default>*</default>
+        <choice value="*">All</choice>
+      </input>
+      <html>
+        <button id="save_settings">Save settings</button>
+        <div id="risk_score_tuner" class="splunk-view" data-require="app/risk_manager/views/riskscoretunerview" data-options='{  "managerid": "risk_score_tuner_search" }'> </div>
+      </html>
+    </panel>
+  </row>
+</form>

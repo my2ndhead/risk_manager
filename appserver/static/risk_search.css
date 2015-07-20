@@ -1,0 +1,15 @@
+#risk_contributing_data [data\-sort\-key='decrypt_command'] {
+  display:none;
+}
+
+#risk_contributing_data .decrypt_command {
+  display:none;
+}
+
+#risk_contributing_data_decrypted [data\-sort\-key='decrypt_command'] {
+  display:none;
+}
+
+#risk_contributing_data_decrypted .decrypt_command {
+  display:none;
+}
