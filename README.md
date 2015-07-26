@@ -1,7 +1,7 @@
 # Risk Manager
 - **Authors**:		Simon Balz <simon@balz.me>, Mika Borner <mika.borner@gmail.com>, Christoph Dittmann <mulibu.flyingk@googlemail.com>, Harun Kuessner <h.huessner@posteo.de>
 - **Description**:	Risk Manager
-- **Version**: 		1.0
+- **Version**: 		1.0.1
 
 ## Introduction
 The Risk Manager adds risk scoring functionality to Splunk.
@@ -20,6 +20,9 @@ The Risk Manager adds risk scoring functionality to Splunk.
 -Risk Manager is part of the Hyperthreat-Suite
 
 ## Release Notes
+- **v1.0.**	/	2015-07-26
+	- Minor improvement for risk_settings	
+
 - **v1.0**	/	2015-07-20
 	- First major release for Apptitude2 submission
 
