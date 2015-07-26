@@ -20,7 +20,7 @@ The Risk Manager adds risk scoring functionality to Splunk.
 -Risk Manager is part of the Hyperthreat-Suite
 
 ## Release Notes
-- **v1.0.**	/	2015-07-26
+- **v1.0.1**	/	2015-07-26
 	- Minor improvement for risk_settings	
 
 - **v1.0**	/	2015-07-20
