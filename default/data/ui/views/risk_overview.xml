@@ -1,7 +1,7 @@
-<form script="risk_overview.js" stylesheet="risk_overview.css">
+<form>
   <label>Risk Overview</label>
   <fieldset submitButton="true" autoRun="true">
-    <input type="time" token="timerange">
+    <input type="time" token="timerange" searchWhenChanged="true">
       <label>Time Range:</label>
       <default>
         <earliest>-24h@h</earliest>
@@ -21,8 +21,9 @@
     <input type="dropdown" token="risk_object_token" searchWhenChanged="true">
       <label>Risk Object:</label>
       <search>
-        <query>| tstats count from datamodel="risk_manager" groupby All_Risks_Events.risk_object, All_Risks_Events.risk_object_type | search All_Risks_Events.risk_object_type="$risk_object_type_token$"</query>
+        <query>| tstats count from datamodel="risk_manager" groupby All_Risks_Events.risk_object, All_Risks_Events.risk_object_type | search All_Risks_Events.risk_object_type="*"</query>
         <earliest>0</earliest>
+        <latest></latest>
       </search>
       <fieldForLabel>All_Risks_Events.risk_object</fieldForLabel>
       <fieldForValue>All_Risks_Events.risk_object</fieldForValue>
@@ -43,48 +44,100 @@
   <row>
     <panel>
       <single id="sv_risk_objects">
-        <title>Risk Objects</title>
         <search>
-          <query>| tstats dc(All_Risks_Events.risk_object) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats dc(All_Risks_Events.risk_object) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" earliest=-48h latest=-24h | eval joiner="joiner" ] | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value</query>
+          <query>| pivot risk_manager All_Risks_Events count(All_Risks_Events) AS value SPLITROW _time AS _time PERIOD auto FILTER risk_object is "$risk_object_token$" FILTER risk_object_type is "$risk_object_type_token$" FILTER alert is "$alert_token$"</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
         <option name="field">value</option>
         <option name="trendField">trend</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x156877","0x156877"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="linkView">search</option>
+        <option name="underLabel">Risk Objects</option>
       </single>
       <single id="sv_risk_score">
-        <title>Average Risk Score</title>
         <search>
-          <query>| tstats avg(All_Risks_Events.risk_score) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats avg(All_Risks_Events.risk_score) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value | foreach trend, value, trend_value [eval &lt;&lt;FIELD&gt;&gt;=round(&lt;&lt;FIELD&gt;&gt;,0)]</query>
+          <query>| pivot risk_manager All_Risks_Events avg(risk_score) AS value SPLITROW _time AS _time PERIOD auto FILTER risk_object is "$risk_object_token$" FILTER risk_object_type is "$risk_object_type_token$" FILTER alert is "$alert_token$"</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
         <option name="field">value</option>
         <option name="trendField">trend</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x2B7D8C","0x2B7D8C"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="linkView">search</option>
+        <option name="underLabel">Average Risk Score</option>
       </single>
       <single id="sv_total_risk_score">
-        <title>Total Risk Score</title>
         <search>
-          <query>| tstats sum(All_Risks_Events.risk_score) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats sum(All_Risks_Events.risk_score) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value |</query>
+          <query>| pivot risk_manager All_Risks_Events sum(risk_score) AS value SPLITROW _time AS _time PERIOD auto FILTER risk_object is "$risk_object_token$" FILTER risk_object_type is "$risk_object_type_token$" FILTER alert is "$alert_token$"</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
         <option name="field">value</option>
         <option name="trendField">trend</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x6EB3C0","0x6EB3C0"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="linkView">search</option>
+        <option name="underLabel">Total Risk Score</option>
       </single>
       <single id="sv_alert_searches">
-        <title>Alert Searches</title>
         <search>
-          <query>| tstats dc(All_Risks_Events.alert) AS value from datamodel=risk_manager where nodename=All_Risks_Events All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" | join type=left joiner [| tstats dc(All_Risks_Events.alert) AS trend_value from datamodel=risk_manager where nodename=All_Risks_Events earliest=-48h latest=-24h All_Risks_Events.risk_object_type="$risk_object_type_token$" All_Risks_Events.risk_object="$risk_object_token$" All_Risks_Events.alert="$alert_token$" | eval joiner="joiner" ]  | fields - joiner | eval trend_value=if(isnull(trend_value),0,trend_value) | eval trend=value-trend_value |</query>
+          <query>| pivot risk_manager All_Risks_Events dc(alert) AS value SPLITROW _time AS _time PERIOD auto FILTER risk_object is "$risk_object_token$" FILTER risk_object_type is "$risk_object_type_token$" FILTER alert is "$alert_token$"</query>
           <earliest>$timerange.earliest$</earliest>
           <latest>$timerange.latest$</latest>
         </search>
         <option name="drilldown">none</option>
         <option name="field">value</option>
         <option name="trendField">trend</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xA4D6DF","0xA4D6DF"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="linkView">search</option>
+        <option name="underLabel">Alert Searches</option>
       </single>
     </panel>
   </row>
