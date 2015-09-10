@@ -35,12 +35,13 @@ require([
 
     var HiddenCellRenderer = TableView.BaseCellRenderer.extend({
         canRender: function(cell) {
+            console.debug("cell", cell);
             // Only use the cell renderer for the specific field
             return (cell.field==="decrypt_command");
         },
         render: function($td, cell) {
             // ADD class to cell -> CSS
-            return _(['decrypt_command']).contains(cell.field);
+            $td.addClass(cell.field).html(cell.value);
         }
     });
 
