@@ -1,0 +1,21 @@
+<form script="autodiscover.js, risk_settings.js" stylesheet="risk_settings.css">
+  <label>Risk Settings</label>
+  <search id="risk_settings_search">
+    <query>| inputlookup risk_settings| eval key=_key |  append [| rest /servicesNS/-/-/saved/searches/ splunk_server=local | search action.script.filename=risk_handler.py eai:acl.sharing!="user" | fields title | rename title as alert] | dedup alert | eval risk_object=if(isnull(risk_object),"",risk_object) | eval risk_score=if(isnull(risk_score), 0, risk_score) | eval collect_contributing_data=if(isnull(collect_contributing_data), 0, collect_contributing_data) | table key, alert, risk_object, risk_score, collect_contributing_data</query>
+    <earliest>0</earliest>
+    <latest></latest>
+  </search>
+  <row>
+    <panel>
+      <html>
+        <button id="save_settings">Save settings</button>
+        <div id="risk_settings" 
+          class="splunk-view"
+          data-require="app/risk_manager/views/risksettingsview"
+          data-options='{
+            "managerid": "risk_settings_search"
+          }'> </div>
+      </html>
+    </panel>
+  </row>
+</form>
