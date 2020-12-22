@@ -1,11 +1,7 @@
 __pycache__/
 *.py[cod]
-local/risk_manager.conf
-local/app.conf
-local/collections.conf
-local/datamodels.conf
-local/templates/
-metadata/local.meta
+local/
+local.meta
 .DS_Store
 _work/
 *Test.py
@@ -19,3 +15,12 @@ MANIFEST
 RELEASE-VERSION
 .coverage
 nosetests.xml
+stage/
+dist/
+npm-debug.log
+results.txt
+site/
+.gradle
+build/
+.env
+.vscode/*
