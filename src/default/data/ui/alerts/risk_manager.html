@@ -1,0 +1,14 @@
+<form>
+    <splunk-control-group label="Risk Score" help="Enter a positive or negative integer value to add or subtract to the risk score">
+        <splunk-text-input name="action.risk_manager.param.risk_score" id="risk_score" >
+        </splunk-text-input>
+    </splunk-control-group>
+
+    <splunk-control-group label="Risk Object Type" help="Select the Risk Object Type to be increased">
+        <splunk-select  name="action.risk_manager.param.risk_object_type" id="risk_object_type">
+            <option value="host">Host</option>
+            <option value="user">User</option>
+            <option value="other">Other</option>
+        </splunk-select>
+    </splunk-control-group>
+</form>
